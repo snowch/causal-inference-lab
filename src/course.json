@@ -1,0 +1,666 @@
+{
+  "modules": [
+    {
+      "title": "Ask a causal question",
+      "description": "Define the alternative outcome and the experiment you wish you could run.",
+      "slug": "question"
+    },
+    {
+      "title": "Draw the causal story",
+      "description": "Distinguish common causes, common effects and causal pathways.",
+      "slug": "design"
+    },
+    {
+      "title": "Build a fair comparison",
+      "description": "Standardise, weight and inspect whether the comparison exists.",
+      "slug": "estimate"
+    },
+    {
+      "title": "Use the assignment design",
+      "description": "Match a target population and investigate time changes and cutoffs.",
+      "slug": "observe"
+    },
+    {
+      "title": "Challenge the estimate",
+      "description": "Examine encouragement designs, sampling uncertainty and missing causes.",
+      "slug": "challenge"
+    },
+    {
+      "title": "Make the claim travel",
+      "description": "Check observation, generalisation and the reasoning behind a conclusion.",
+      "slug": "share"
+    }
+  ],
+  "lessons": [
+    {
+      "slug": "two-possible-outcomes",
+      "title": "One person, two possible outcomes",
+      "short": "Calculate an average causal effect when a teaching model reveals both possible outcomes.",
+      "goal": "Calculate an average causal effect when a teaching model reveals both possible outcomes.",
+      "explain": [
+        "A causal question asks what would change if we intervened. A treatment is the exposure or action being compared; an outcome is what happens afterward. Here the treatment is attending a specified training course and the outcome is a score one month later.",
+        "A potential outcome is the result under a particular treatment choice. Write $Y(1)$ for the score with training and $Y(0)$ for the score without it. A person\u2019s effect is $Y(1)-Y(0)$. The average treatment effect, or ATE, averages these differences over a stated population.",
+        "The invented table reveals both potential outcomes for six people. Real data reveal only the outcome under the treatment each person actually received. That missing alternative is the fundamental problem: even a perfectly measured outcome does not reveal an individual causal effect."
+      ],
+      "predict": "Will the average effect describe every person?",
+      "look": "The average is positive although one person has a negative effect. The model supplies information that ordinary observational records cannot supply.",
+      "change": "Change the last trained score from 88 to 98. Recalculate the average and describe whose effect changed.",
+      "question": "A database records each patient\u2019s treatment and recovery. What is missing for a direct individual effect?",
+      "options": [
+        "The outcome that patient would have had under the other treatment.",
+        "Only a larger sample size.",
+        "Only the correlation coefficient."
+      ],
+      "correct": 0,
+      "feedback": "An individual effect compares two potential outcomes for the same person. A larger database still observes only one of them per person.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "An individual effect compares two potential outcomes for the same person."
+      ],
+      "limit": "The model reveals both outcomes by construction. It does not identify an effect from real observational data.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 0,
+      "code": "01-two-possible-outcomes.py"
+    },
+    {
+      "slug": "association-is-not-intervention",
+      "title": "A difference with no treatment effect",
+      "short": "Distinguish an observed group difference from a causal effect.",
+      "goal": "Distinguish an observed group difference from a causal effect.",
+      "explain": [
+        "An association is a difference or pattern in observed data. A causal effect concerns changing treatment. People who choose a course may already differ from people who do not.",
+        "A confounder is a common cause of treatment and outcome. In this model, prior preparation determines both course attendance and score. Training has exactly zero effect: each person\u2019s two potential scores are equal.",
+        "We observe mostly well-prepared learners in the trained group. Compute the observed difference, then compare it with the effect revealed by the model. This is the scientific-method question \u201cWhat else could explain the result?\u201d made numerical."
+      ],
+      "predict": "Can the observed difference be positive when every causal effect is zero?",
+      "look": "The observed difference reflects who attended. More precision around that difference would not remove its bias.",
+      "change": "Replace the training array with [0, 1, 0, 1, 0, 1, 0, 1]. What balances, and what happens to the difference?",
+      "question": "Umbrella users get wetter than nonusers. Which alternative explanation matters?",
+      "options": [
+        "Umbrellas necessarily cause rain.",
+        "Rain influences both umbrella use and getting wet.",
+        "A strong association rules out alternatives."
+      ],
+      "correct": 1,
+      "feedback": "Rain is a common cause. A comparison must account for the conditions that influenced umbrella use before it can isolate the effect of using one.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Rain is a common cause."
+      ],
+      "limit": "All values are invented; the zero effect is an authored fact, not a conclusion inferred from observed scores.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 0,
+      "code": "02-association-is-not-intervention.py"
+    },
+    {
+      "slug": "write-the-target-trial",
+      "title": "Describe the experiment you wish you had",
+      "short": "Specify treatment, eligibility, time zero and follow-up for a causal question.",
+      "goal": "Specify treatment, eligibility, time zero and follow-up for a causal question.",
+      "explain": [
+        "A target trial is a description of the randomised experiment that would answer your question. Observational research can try to emulate its protocol even when an actual trial is impossible. Specify eligibility, treatment strategies, assignment, follow-up, outcome and the causal contrast.",
+        "Time zero is when eligibility, treatment assignment and follow-up begin together. Classifying people as treated because they eventually take a course can give them guaranteed survival or participation time before treatment. This is often called immortal-time bias.",
+        "Consistency means that the observed outcome under the treatment actually received equals the corresponding potential outcome. \u201cTraining\u201d needs enough detail to support this claim: a one-hour video and six months of coaching need not represent the same intervention. The code audits two invented protocol descriptions, rather than estimating an effect."
+      ],
+      "predict": "Which protocol leaves its treatment or start time ambiguous?",
+      "look": "Completeness is a starting point. A computer can flag a missing date but cannot establish that treatment versions are comparable.",
+      "change": "Add a time zero to the vague protocol. Explain which remaining ambiguity a field-presence check misses.",
+      "question": "A study calls people treated if they attend any time during the next year but counts outcomes from January. What needs repair?",
+      "options": [
+        "Round the outcome more precisely.",
+        "Align treatment assignment and the start of follow-up.",
+        "Discard all untreated people."
+      ],
+      "correct": 1,
+      "feedback": "Treatment classification using future events can select people who remained eligible long enough to receive treatment. Aligning time zero is part of the design.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Treatment classification using future events can select people who remained eligible long enough to receive treatment."
+      ],
+      "limit": "This is a protocol checklist, not a causal estimator. It cannot automatically verify consistency, eligibility or absence of interference.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 0,
+      "code": "03-write-the-target-trial.py"
+    },
+    {
+      "slug": "common-causes",
+      "title": "Draw the alternative explanation",
+      "short": "Identify the adjustment variable for a simple common-cause diagram.",
+      "goal": "Identify the adjustment variable for a simple common-cause diagram.",
+      "explain": [
+        "A directed acyclic graph, or DAG, represents causal assumptions with arrows and no directed loops. An arrow means a proposed direct causal influence at the chosen level of detail. It is a claim to justify using subject knowledge, not a fact discovered from correlation alone.",
+        "Let $L$ be preparation, $A$ training and $Y$ score. The diagram has $L \\to A$, $L \\to Y$ and $A \\to Y$. The route $A \\leftarrow L \\to Y$ is a backdoor path: it links treatment and outcome through a common cause.",
+        "Adjustment compares outcomes within levels of a suitable measured common cause, then combines these comparisons for a target population. In this simple graph, conditioning on preparation blocks the backdoor path. The invented table makes that within-group comparison visible."
+      ],
+      "predict": "Will the within-preparation contrasts agree with the overall contrast?",
+      "look": "Both strata show five points; the overall difference also includes the different preparation mix.",
+      "change": "Set all four counts to 50. Check whether the overall and within-group differences now agree.",
+      "question": "In a diagram, age causes treatment choice and outcome. Neither is a cause of age. What is age\u2019s role?",
+      "options": [
+        "Mediator.",
+        "Common cause to consider for adjustment.",
+        "Outcome of treatment."
+      ],
+      "correct": 1,
+      "feedback": "Age lies on a backdoor path through a common cause. Under this simple graph, adjusting for it blocks that path; real graphs may require other variables too.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Age lies on a backdoor path through a common cause."
+      ],
+      "limit": "The diagram assumes preparation is measured adequately and captures all common causes. Observed balance on one variable cannot establish that assumption.",
+      "source": [
+        "Pearl \u00b7 Causal diagrams for empirical research",
+        "https://doi.org/10.1093/biomet/82.4.669"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 1,
+      "code": "04-common-causes.py"
+    },
+    {
+      "slug": "collider-trap",
+      "title": "When adjustment creates a problem",
+      "short": "Show how conditioning on a common effect creates an association.",
+      "goal": "Show how conditioning on a common effect creates an association.",
+      "explain": [
+        "A collider is a common effect of two variables: $A \\to S \\leftarrow U$. Without conditioning on $S$ or its descendants, this path is blocked. Selecting or adjusting for $S$ can open the path.",
+        "Imagine independent skill and luck, each a fair coin. Admission happens if either is high. Among admitted people, someone with low skill must have high luck; someone with high skill may have either. Selection creates dependence even though the two causes began independently.",
+        "The code enumerates the entire four-person teaching population, so no sampling uncertainty obscures the mechanism. In observational studies, selection into a hospital, employment or a survey can create similar structures. The direction of arrows determines whether adjustment helps."
+      ],
+      "predict": "Among admitted people, will skill and luck still be independent?",
+      "look": "Selection induces a negative association. Adding more selected records would estimate that association more precisely.",
+      "change": "Change admission to (skill + luck) <= 1. Explain the selection rule before inspecting the correlation.",
+      "question": "Treatment and underlying illness both cause a follow-up test to be ordered. Should you automatically restrict to tested patients?",
+      "options": [
+        "Yes, selection always improves comparability.",
+        "Yes, because the test happens later.",
+        "No; testing may be a collider and induce selection bias."
+      ],
+      "correct": 2,
+      "feedback": "Testing is a common effect in the stated diagram. Conditioning on it can connect treatment to illness; a valid design needs a justification for the selected population.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Testing is a common effect in the stated diagram."
+      ],
+      "limit": "This deterministic population illustrates selection. It does not imply every selected dataset has a negative association or that every post-treatment variable is a collider.",
+      "source": [
+        "Pearl \u00b7 Causal diagrams for empirical research",
+        "https://doi.org/10.1093/biomet/82.4.669"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 1,
+      "code": "05-collider-trap.py"
+    },
+    {
+      "slug": "mediator-or-confounder",
+      "title": "Which effect are you asking for?",
+      "short": "Distinguish a total effect from a direct pathway in a causal model.",
+      "goal": "Distinguish a total effect from a direct pathway in a causal model.",
+      "explain": [
+        "A mediator lies on a causal pathway from treatment to outcome. Training may increase practice, which increases score. For the total effect, both the direct training pathway and the pathway through practice count.",
+        "Our authored linear model says practice equals twice training and score equals three times training plus four times practice. Increasing training by one therefore changes score by $3+4\\times2=11$. Holding practice fixed would leave only the direct coefficient of three.",
+        "Adjusting for a mediator can remove part of the effect you wanted. Estimating direct effects from observational data requires additional assumptions, including control of mediator\u2013outcome confounding. Reading a coefficient from this known structural model is easier than identifying it in real data."
+      ],
+      "predict": "Will holding practice fixed retain the whole training effect?",
+      "look": "Eleven and three answer different questions. A variable\u2019s timing and causal role matter more than whether it improves prediction.",
+      "change": "Set training_to_practice to 0. Which two contrasts become equal, and why?",
+      "question": "A policy increases income, which improves housing, which improves health. For the total policy effect, housing is\u2026",
+      "options": [
+        "A mediator whose pathway contributes to the effect.",
+        "Always a baseline confounder.",
+        "Evidence that the policy has no effect."
+      ],
+      "correct": 0,
+      "feedback": "Housing transmits part of the policy effect in the stated model. Blocking this pathway changes the causal question.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Housing transmits part of the policy effect in the stated model."
+      ],
+      "limit": "The structural coefficients are authored. No regression on real observational data has identified these direct or indirect effects.",
+      "source": [
+        "Pearl \u00b7 Causal diagrams for empirical research",
+        "https://doi.org/10.1093/biomet/82.4.669"
+      ],
+      "minutes": 8,
+      "kind": "Authored structural model",
+      "module": 1,
+      "code": "06-mediator-or-confounder.py"
+    },
+    {
+      "slug": "standardise-to-a-population",
+      "title": "Compare the same population twice",
+      "short": "Calculate an adjusted average effect by standardisation.",
+      "goal": "Calculate an adjusted average effect by standardisation.",
+      "explain": [
+        "Standardisation predicts each treatment\u2019s average outcome in the same target population. For each baseline group, calculate its treated and untreated outcome means, then weight both sets by the target group proportions.",
+        "Identification means the causal quantity can be expressed using observed-data quantities under stated assumptions. Here we need conditional exchangeability (no unmeasured common causes within baseline groups), positivity (both treatments possible in each target group), and consistency. For this simple individual treatment interpretation, assume no interference between people.",
+        "The low-preparation group has a two-point contrast and the high-preparation group a ten-point contrast. Equal weighting and a target with 80% low preparation answer different population questions. Neither target is automatically the correct one."
+      ],
+      "predict": "Will changing the target mix change the average effect?",
+      "look": "The target proportions weight treatment effects, not the observed treatment allocation. Naming the population is part of naming the effect.",
+      "change": "Change target to [0.2, 0.8]. Predict the direction of the change before running.",
+      "question": "Two populations have the same group-specific effects but different group proportions. Must their ATEs match?",
+      "options": [
+        "Yes, an effect is always universal.",
+        "No, average effects can differ with the population mix.",
+        "Only if both studies have small p-values."
+      ],
+      "correct": 1,
+      "feedback": "A population average weights its members\u2019 effects. Different mixes can produce different averages even when group-specific effects agree.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "A population average weights its members\u2019 effects."
+      ],
+      "limit": "The group means are invented and treated as known. Standardisation does not repair unmeasured confounding or unsupported treatment groups.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 2,
+      "code": "07-standardise-to-a-population.py"
+    },
+    {
+      "slug": "inverse-probability-weights",
+      "title": "Give underrepresented choices more weight",
+      "short": "Calculate inverse-probability weights for a known treatment mechanism.",
+      "goal": "Calculate inverse-probability weights for a known treatment mechanism.",
+      "explain": [
+        "A propensity score is the probability of receiving treatment given baseline variables. It describes treatment assignment, not the probability that a person benefits. Inverse-probability weighting gives more influence to people whose observed treatment was less likely.",
+        "For treated people the weight is $1/e(L)$, where $e(L)$ is the propensity score. For untreated people it is $1/(1-e(L))$. We use normalised weighted means, also called H\u00e1jek means, and subtract the untreated mean from the treated mean.",
+        "This constructed population has 20% treated in one baseline group and 80% in another. The true propensities are supplied. With consistency, positivity, conditional exchangeability and no interference, weighting can target the population ATE. Estimated propensities introduce additional modelling and uncertainty."
+      ],
+      "predict": "Which treated people receive weight five?",
+      "look": "The reweighted comparison recovers five in this balanced construction. The known assignment model is an educational advantage, not a feature of most datasets.",
+      "change": "Change treatment_effect from 5 to -3. Check the sign of the weighted contrast.",
+      "question": "What does a propensity score of 0.1 mean?",
+      "options": [
+        "A 10% probability of benefit.",
+        "A 10% outcome risk.",
+        "A 10% treatment probability given the baseline information."
+      ],
+      "correct": 2,
+      "feedback": "The propensity score models treatment assignment. It does not directly measure outcome risk or treatment benefit.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "The propensity score models treatment assignment."
+      ],
+      "limit": "Exact recovery is constructed here. Correct weighting in observed data still depends on measured confounders, assignment modelling and overlap.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 2,
+      "code": "08-inverse-probability-weights.py"
+    },
+    {
+      "slug": "overlap-and-positivity",
+      "title": "When the comparison is missing",
+      "short": "Diagnose an unsupported treatment comparison before estimating an effect.",
+      "goal": "Diagnose an unsupported treatment comparison before estimating an effect.",
+      "explain": [
+        "Positivity requires a nonzero chance of each treatment within every baseline group needed for the target effect. If everyone above a threshold receives treatment, the data contain no untreated comparison above that threshold.",
+        "Near violations produce very large inverse-probability weights. Effective sample size, calculated here as $(\\sum w)^2/\\sum w^2$, is a descriptive measure of weight concentration. It is not a complete standard-error calculation.",
+        "Trimming extreme weights can trade variance for bias and may change the estimand, the precise quantity being estimated. Restricting the target population to overlap can be sensible, but the population change must be reported. A statistical model can extrapolate into an empty cell without supplying new evidence."
+      ],
+      "predict": "Will one huge weight make ten observations behave like ten equally weighted observations?",
+      "look": "The empty cell is an identification concern. A larger sample drawn under the same deterministic treatment rule will not fill it.",
+      "change": "Change the final weight from 100 to 1. Explain which diagnostic changes and which empty-cell problem remains.",
+      "question": "Every severely ill patient receives treatment. Can these data alone identify an untreated mean for severely ill patients without extrapolation?",
+      "options": [
+        "No; that treatment comparison lacks support.",
+        "Yes; add more decimal places.",
+        "Yes; weights create untreated outcomes."
+      ],
+      "correct": 0,
+      "feedback": "There are no untreated severe patients in this design. Weighting cannot manufacture their outcomes; a model-based extrapolation requires additional assumptions.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "There are no untreated severe patients in this design."
+      ],
+      "limit": "Weight-based effective sample size is a diagnostic. These invented counts do not evaluate balance on unmeasured variables.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 2,
+      "code": "09-overlap-and-positivity.py"
+    },
+    {
+      "slug": "matching-and-targets",
+      "title": "Match people, then name the target",
+      "short": "Calculate an effect among treated people using exact baseline matches.",
+      "goal": "Calculate an effect among treated people using exact baseline matches.",
+      "explain": [
+        "Matching selects untreated comparisons with similar baseline variables to treated people. Here we use exact matching on a binary preparation group. For each treated person, the untreated group mean supplies the comparison.",
+        "This targets the average treatment effect among the treated, or ATT, when consistency, conditional exchangeability and untreated comparison support hold for the treated population. ATT and ATE need not match when treatment effects vary and the treated population differs from the whole population.",
+        "Exact matching on one recorded variable does not guarantee comparability on everything else. In real work, inspect baseline balance, discarded observations, replacement rules and the target population. Do not match on consequences of treatment just because they predict outcomes well."
+      ],
+      "predict": "Will the treated-population effect equal the equal-mix population effect?",
+      "look": "The ATT weights groups according to who received treatment. The equal-mix ATE weights them equally.",
+      "change": "Change treated_group to [0, 0, 0, 1] and scores to [42., 42., 42., 80.]. Explain the new target mix.",
+      "question": "A matching analysis drops treated patients with no comparable controls. Its effect applies directly to\u2026",
+      "options": [
+        "Every eligible patient automatically.",
+        "The retained treated population, under the matching assumptions.",
+        "Only the discarded patients."
+      ],
+      "correct": 1,
+      "feedback": "Dropping unsupported treated people changes the target. Report who remains and avoid automatically generalising their estimate to all treated people.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Dropping unsupported treated people changes the target."
+      ],
+      "limit": "Control means are invented and known without estimation error. Real matching adds uncertainty, support decisions and unmeasured-confounding concerns.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 3,
+      "code": "10-matching-and-targets.py"
+    },
+    {
+      "slug": "difference-in-differences",
+      "title": "Subtract the change that would happen anyway",
+      "short": "Compute a difference-in-differences estimate and expose its key assumption.",
+      "goal": "Compute a difference-in-differences estimate and expose its key assumption.",
+      "explain": [
+        "Difference-in-differences compares the before-to-after change in an exposed group with the change in a comparison group. Subtracting the comparison change can remove a shared time trend.",
+        "The parallel-trends assumption says that, without treatment, the two groups\u2019 mean outcomes would have changed by the same amount over the relevant period. It concerns unobserved untreated outcomes after treatment; matching pre-treatment trends can support its plausibility but cannot prove it.",
+        "Our two-period model includes a shared six-point time change and a four-point policy effect. Add an unobserved group-specific trend to see the estimate mix that trend with the effect. Also needed are no anticipation, no policy spillovers to the comparison group and a comparable population over time."
+      ],
+      "predict": "What happens if the treated group would improve three extra points even without the policy?",
+      "look": "The estimator removes the shared trend, not a separate untreated trend unique to the exposed group.",
+      "change": "Set group_specific_trend to 3. Which assumption fails, and how far does the estimate move?",
+      "question": "Two regions had similar pre-policy trends. Does that establish parallel untreated trends after the policy?",
+      "options": [
+        "Yes, with certainty.",
+        "Only if the p-value is small.",
+        "No; it provides context but the post-policy counterfactual remains unobserved."
+      ],
+      "correct": 2,
+      "feedback": "Pre-period evidence can challenge or support a design. It cannot reveal the treated group\u2019s unobserved post-policy trajectory without treatment.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Pre-period evidence can challenge or support a design."
+      ],
+      "limit": "This is the simple two-group, two-period design. Staggered adoption and heterogeneous effects require additional methods.",
+      "source": [
+        "World Bank \u00b7 Impact Evaluation in Practice",
+        "https://www.worldbank.org/en/programs/sief-trust-fund/publication/impact-evaluation-in-practice"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 3,
+      "code": "11-difference-in-differences.py"
+    },
+    {
+      "slug": "regression-discontinuity",
+      "title": "Look just beside the cutoff",
+      "short": "Distinguish a local cutoff effect from a population-wide effect.",
+      "goal": "Distinguish a local cutoff effect from a population-wide effect.",
+      "explain": [
+        "Regression discontinuity uses a treatment assignment cutoff. In a sharp design, everyone above the cutoff is treated and everyone below is untreated. Compare outcomes just on either side, where baseline characteristics may be similar.",
+        "The continuity assumption says untreated and treated potential-outcome means would change smoothly through the cutoff in the absence of the treatment switch. Precise manipulation of the assignment score, another policy at the same cutoff, or a discontinuous population change threatens the comparison.",
+        "The code subtracts local means under a known linear trend. A finite window includes some baseline-score difference, so its contrast is only an approximation to the discontinuity. A smaller window reduces this trend contamination here; real samples then lose precision."
+      ],
+      "predict": "Will a wider window mix more of the smooth baseline trend into a raw contrast?",
+      "look": "The local contrast approaches five as the smooth trend contribution shrinks. This is a local effect at the cutoff.",
+      "change": "Set the baseline slope from 0.8 to 0. What changes across windows?",
+      "question": "A scholarship cutoff effect is credible near a score of 80. Does it directly identify the effect for score 20?",
+      "options": [
+        "Yes, all treated effects must be equal.",
+        "No; generalising far from the cutoff needs further assumptions.",
+        "Yes, if the window is narrow enough."
+      ],
+      "correct": 1,
+      "feedback": "Regression discontinuity identifies a local effect under its assumptions. A narrow window improves local comparability, not population-wide transportability.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Regression discontinuity identifies a local effect under its assumptions."
+      ],
+      "limit": "Noise-free invented data illustrate locality. A real analysis needs appropriate local regression, bandwidth choices, uncertainty and design diagnostics.",
+      "source": [
+        "World Bank \u00b7 Impact Evaluation in Practice",
+        "https://www.worldbank.org/en/programs/sief-trust-fund/publication/impact-evaluation-in-practice"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 3,
+      "code": "12-regression-discontinuity.py"
+    },
+    {
+      "slug": "instrumental-variables",
+      "title": "An encouragement is not the treatment",
+      "short": "Interpret a simple instrumental-variable estimate for people whose treatment changes.",
+      "goal": "Interpret a simple instrumental-variable estimate for people whose treatment changes.",
+      "explain": [
+        "An instrument is a variable that shifts treatment and can identify a causal effect under special assumptions. Consider a random course invitation. Some people always attend, some never attend, and some attend only when invited. Those last people are compliers.",
+        "For a binary instrument, the Wald ratio divides the invitation\u2013outcome difference by the invitation\u2013attendance difference. Under independence, relevance, exclusion (invitation affects the outcome only through attendance), monotonicity (no one attends only when not invited), consistency and no interference, it identifies a local average treatment effect for compliers.",
+        "The code uses an enumerated population with equal type proportions in both invitation groups. A direct motivational effect of invitation violates exclusion. The ratio then combines attendance and invitation effects; a weak effect on attendance can amplify that problem."
+      ],
+      "predict": "Will a direct invitation effect be divided by the attendance change too?",
+      "look": "A ratio of six is the complier effect in this authored valid model. It need not be the effect for always-takers or never-takers.",
+      "change": "Set direct_invitation_effect to 1. Compare the ratio with the unchanged attendance effect.",
+      "question": "A valid random invitation identifies an attendance effect through the Wald ratio. Whose effect is it?",
+      "options": [
+        "All people automatically.",
+        "People who would always attend.",
+        "Compliers whose attendance changes because of invitation."
+      ],
+      "correct": 2,
+      "feedback": "With the stated assumptions, the local average effect concerns compliers. Extending it to everyone requires assumptions about effect variation.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "With the stated assumptions, the local average effect concerns compliers."
+      ],
+      "limit": "The exclusion restriction cannot generally be verified from the observed instrument, treatment and outcome alone. This example supplies it by construction.",
+      "source": [
+        "Angrist, Imbens & Rubin \u00b7 Identification of causal effects using instrumental variables",
+        "https://doi.org/10.1080/01621459.1996.10476902"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 4,
+      "code": "13-instrumental-variables.py"
+    },
+    {
+      "slug": "uncertainty-is-not-identification",
+      "title": "A precise answer to the wrong question",
+      "short": "Separate sampling uncertainty from confounding bias.",
+      "goal": "Separate sampling uncertainty from confounding bias.",
+      "explain": [
+        "A confidence interval quantifies sampling uncertainty under a specified procedure and assumptions. It does not automatically include systematic error from confounding, measurement or selection.",
+        "This simulation makes treatment more common among people with high baseline scores. Treatment adds exactly two points, but the unadjusted group contrast includes the baseline difference. Larger samples make the wrong contrast more precise.",
+        "We use the bootstrap: resample whole independent people with replacement and recalculate the unadjusted difference. The percentile interval is an approximate interval for that observed-data contrast. It cannot turn the contrast into an identified causal effect."
+      ],
+      "predict": "Will a narrow interval necessarily contain the authored causal effect?",
+      "look": "The interval describes sampling variability of the biased comparison. It is not an uncertainty interval covering every possible source of error.",
+      "change": "Increase n from 2000 to 8000. Inspect interval width separately from distance to two.",
+      "question": "An unadjusted estimate is precise but treatment depends on prior health. What has precision established?",
+      "options": [
+        "That confounding is absent.",
+        "That the statistical procedure estimates the observed contrast precisely under its assumptions.",
+        "That randomisation occurred."
+      ],
+      "correct": 1,
+      "feedback": "Precision concerns variability. Identification requires a credible link from the observed comparison to the causal question.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Precision concerns variability."
+      ],
+      "limit": "People are independent in the simulation. The bootstrap procedure is approximate; clustered or dependent data need a suitable resampling unit.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Seeded simulation",
+      "module": 4,
+      "code": "14-uncertainty-is-not-identification.py"
+    },
+    {
+      "slug": "sensitivity-to-confounding",
+      "title": "How strong would the missing cause need to be?",
+      "short": "Calculate a simple sensitivity analysis for an unmeasured binary common cause.",
+      "goal": "Calculate a simple sensitivity analysis for an unmeasured binary common cause.",
+      "explain": [
+        "A sensitivity analysis asks how conclusions change under explicit departures from an assumption. It does not discover whether a missing confounder exists. It makes the size of a proposed alternative explanation inspectable.",
+        "Suppose an unmeasured binary variable adds a constant amount to the outcome and has different prevalence in treated and untreated groups. In an additive model without interactions, its contribution to the observed contrast is its outcome effect times the prevalence difference.",
+        "Subtract that hypothetical bias from a four-point observed contrast. This is an algebraic scenario analysis, not a fully adjusted estimate. Plausible parameter ranges need subject knowledge or external evidence; choosing convenient values after seeing the result is not validation."
+      ],
+      "predict": "Which combination could explain the whole four-point contrast?",
+      "look": "An effect of ten combined with a prevalence gap of 0.4 explains four points in this model. Whether that scenario is credible is a scientific question.",
+      "change": "Set prevalence_gap to 0.2. What outcome effect would now explain the entire contrast?",
+      "question": "A sensitivity analysis finds a confounder could explain an effect. What follows?",
+      "options": [
+        "Such a confounder definitely exists.",
+        "The effect is definitely zero.",
+        "The conclusion depends on whether that confounding scenario is plausible."
+      ],
+      "correct": 2,
+      "feedback": "Sensitivity analysis evaluates hypothetical departures. It neither proves a missing cause exists nor proves the original assumptions hold.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Sensitivity analysis evaluates hypothetical departures."
+      ],
+      "limit": "The bias formula assumes an additive, constant outcome contribution and a suitable prevalence contrast. It omits sampling uncertainty and more complex confounding structures.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 4,
+      "code": "15-sensitivity-to-confounding.py"
+    },
+    {
+      "slug": "missing-outcomes",
+      "title": "Who is left in the analysis?",
+      "short": "Demonstrate how differential outcome observation changes a treatment contrast.",
+      "goal": "Demonstrate how differential outcome observation changes a treatment contrast.",
+      "explain": [
+        "An outcome can be missing because people drop out, do not answer or are not measured. A complete-case analysis compares only observed outcomes. If observation depends on treatment and outcome-related factors, it can select different kinds of people in each group.",
+        "In this finite model everyone gains exactly five points under treatment. But low-scoring treated people are missing while every untreated outcome is observed. Comparing available cases adds selection to the treatment effect.",
+        "Inverse observation weighting or multiple imputation may help under appropriate missingness and model assumptions, but neither is automatic. Report how many outcomes are missing, why observation differs, and what assumptions would recover the target population. The toy model reveals missing scores only so you can audit the mechanism."
+      ],
+      "predict": "Will the complete-case contrast still be five?",
+      "look": "The treated mean loses its low scores. Identical individual effects do not protect an analysis against selective observation.",
+      "change": "Set observed1 to all True. Explain which selection mechanism you removed.",
+      "question": "Half the treated outcomes and none of the control outcomes are missing. Is discarding the missing rows guaranteed unbiased?",
+      "options": [
+        "No; the observation mechanism and target population matter.",
+        "Yes; software ignores blank cells correctly.",
+        "Yes; equal treatment effects guarantee it."
+      ],
+      "correct": 0,
+      "feedback": "A complete-case analysis targets selected observations unless assumptions connect them to the target population. The missingness mechanism matters.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "A complete-case analysis targets selected observations unless assumptions connect them to the target population."
+      ],
+      "limit": "Both potential outcomes are revealed only in the invented model. In real data the missing scores are unknown, and their distribution cannot generally be verified from observed rows alone.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 5,
+      "code": "16-missing-outcomes.py"
+    },
+    {
+      "slug": "transport-and-interference",
+      "title": "Will the effect travel?",
+      "short": "Recalculate an effect for a new population and recognise a spillover limit.",
+      "goal": "Recalculate an effect for a new population and recognise a spillover limit.",
+      "explain": [
+        "An effect estimated in one setting may not apply to another. Effect modification means a treatment effect differs by a baseline characteristic. Transporting an estimate requires considering the new population mix and whether the relevant response relationships remain applicable.",
+        "We already standardised within a study. Here the same arithmetic transports group-specific effects to a destination population. This requires the supplied group effects to apply there, sufficient overlap in those groups, and adequate measurement of characteristics that explain effect differences.",
+        "Population reweighting does not fix interference: one person\u2019s treatment may affect another person\u2019s outcome. For example, training can spread knowledge to untreated coworkers. A study of individual offers at one uptake level may not estimate the effect of training an entire workplace."
+      ],
+      "predict": "If experienced learners benefit less, which population has the smaller average effect?",
+      "look": "Changing the mix changes the average. The calculation cannot establish that group effects remain stable or that there are no spillovers.",
+      "change": "Change destination_mix to [0.5, 0.5]. Then describe a setting change this arithmetic cannot address.",
+      "question": "Training improves untreated coworkers\u2019 scores through shared knowledge. Which usual individual-treatment assumption is threatened?",
+      "options": [
+        "Equal sample sizes.",
+        "No interference between people.",
+        "Arithmetic averaging."
+      ],
+      "correct": 1,
+      "feedback": "Coworkers\u2019 outcomes depend on others\u2019 training assignments. A treatment strategy and analysis that account for spillovers may be needed.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "Coworkers\u2019 outcomes depend on others\u2019 training assignments."
+      ],
+      "limit": "Transportability and no interference are assumptions here. Reweighting does not establish them or cover unrepresented populations.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 5,
+      "code": "17-transport-and-interference.py"
+    },
+    {
+      "slug": "write-a-causal-claim",
+      "title": "Make the reasoning inspectable",
+      "short": "Write a causal conclusion that separates the estimate, identification assumptions and limits.",
+      "goal": "Write a causal conclusion that separates the estimate, identification assumptions and limits.",
+      "explain": [
+        "A reproducible calculation is necessary but does not by itself establish a causal claim. Someone should be able to inspect the question, target population, treatment timing, causal diagram, comparison strategy, data provenance, estimate and uncertainty.",
+        "This final example compares an unadjusted contrast with a standardised contrast in an invented two-group population. Before calling the adjusted number causal, name consistency, conditional exchangeability, positivity and no interference, and explain why the chosen baseline variable is appropriate.",
+        "Use the report below to describe your target trial, assumptions, result and a next test that could challenge the conclusion. You can export it with the exact last completed execution. The example has known cell means; it deliberately supplies no confidence interval or real-world finding. A real study needs a design-appropriate uncertainty analysis and provenance for its observations."
+      ],
+      "predict": "What does the arithmetic show, and what must the design justify?",
+      "look": "Adjustment removes the measured preparation-mix difference in this example. It cannot establish that preparation is the only relevant common cause.",
+      "change": "Change the high-preparation treated mean from 75 to 80. Explain why target-population weights now matter more.",
+      "question": "Which conclusion is defensible after an observational adjustment?",
+      "options": [
+        "The model proves there are no unmeasured causes.",
+        "The adjusted estimate is causal because it is reproducible.",
+        "Under the stated identification and modelling assumptions, the adjusted contrast estimates the named target effect."
+      ],
+      "correct": 2,
+      "feedback": "A causal interpretation links a specific estimand to a justified design and assumptions. Reproducibility checks the calculation; it does not verify every assumption.",
+      "hints": [
+        "State the population, comparison and outcome before interpreting the number.",
+        "A causal interpretation links a specific estimand to a justified design and assumptions."
+      ],
+      "limit": "This capstone uses invented aggregate cell means with no sampling-error model. It is a reasoning and reporting exercise, not evidence that training improves real scores.",
+      "source": [
+        "Hern\u00e1n & Robins \u00b7 Causal Inference: What If",
+        "https://www.hsph.harvard.edu/miguel-hernan/causal-inference-book/"
+      ],
+      "minutes": 8,
+      "kind": "Invented teaching data",
+      "module": 5,
+      "code": "18-write-a-causal-claim.py"
+    }
+  ]
+}
