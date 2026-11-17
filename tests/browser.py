@@ -128,7 +128,7 @@ try:
         assert record['versions']['pyodide']=='0.27.7'
         edited_code="raise ValueError('a later failed attempt')"
         page.locator('#code').fill(edited_code)
-        assert 'changed' in page.locator('#output-provenance').inner_text()
+        assert 'differs' in page.locator('#output-provenance').inner_text()
         page.locator('#run').click()
         page.wait_for_function("document.querySelector('#status').textContent.includes('reported an error')")
         assert 'a later failed attempt' in page.locator('#error-summary').inner_text()
