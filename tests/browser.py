@@ -219,7 +219,8 @@ try:
         assert static.locator('h1').inner_text()==LESSONS[1]['title']
         assert not static.locator('#run').is_visible()
         assert static.locator('#code').get_attribute('readonly') is not None
-        assert static.get_by_text('Enable JavaScript to check your answer.').is_visible()
+        fallback=static.locator('#practice noscript p')
+        assert fallback.is_visible() and fallback.inner_text()=='Enable JavaScript to check your answer.'
         static.locator('.worked > summary').click()
         assert 'Observed difference: 15' in static.locator('.worked').inner_text()
         assert static.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
