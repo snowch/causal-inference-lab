@@ -9,8 +9,11 @@ weights = np.where(a == 1, 1/e, 1/(1-e))
 naive = y[a == 1].mean() - y[a == 0].mean()
 ipw = np.average(y[a == 1], weights=weights[a == 1]) - np.average(y[a == 0], weights=weights[a == 0])
 print('Observed difference:', naive)
-print('Weighted difference:', ipw)
-print('Weights:', weights)
+print('Weighted difference:', round(ipw, 2))
+print('Weights by preparation and observed treatment:')
+for group, label in [(0, 'Low'), (1, 'High')]:
+    print(label, 'preparation, untreated:', weights[(baseline == group) & (a == 0)])
+    print(label, 'preparation, treated:', weights[(baseline == group) & (a == 1)])
 
 import matplotlib.pyplot as plt
 fig, ax = plt.subplots()

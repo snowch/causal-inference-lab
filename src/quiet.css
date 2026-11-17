@@ -125,3 +125,17 @@
 .run-error p{margin:4px 0 10px;overflow-wrap:anywhere}
 .run-error pre{margin:0;max-height:300px;overflow:auto}
 @media(max-width:700px){.run-error{padding:16px}}
+
+.example-takeaway{margin:14px 0 0;font-size:1rem;line-height:1.7}
+.result-tools{margin:0;border:0;background:transparent}
+.result-tools>summary{display:list-item;font-size:.875rem;padding:7px 0;min-height:40px}
+.result-tools>summary:after{content:none}
+.hints li{font-size:1rem;line-height:1.7;margin:.4rem 0}
+.report-fields>div{margin-bottom:20px}
+.report-fields label{margin-bottom:4px}
+.report-fields p{margin:0 0 6px;font-size:1rem;line-height:1.55}
+.change-task a{display:inline-block;margin-top:6px}
+#save-note[hidden]{display:none}
+#code{scroll-margin-top:150px}
+.code-cell .storage-error{padding:0 16px;color:#ffe0a3}
+.notebook label{display:block;font-size:1rem;margin-top:6px}

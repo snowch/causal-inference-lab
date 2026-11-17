@@ -9,4 +9,4 @@ protocols = [
 for p in protocols:
     missing = [k for k in ['time_zero', 'follow_up'] if not p[k]]
     print(p['name'], 'missing fields:', missing)
-print('A complete form still needs scientific review of treatment and outcome definitions.')
+print('Checked for values in time_zero and follow_up only.')

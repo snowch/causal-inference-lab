@@ -24,7 +24,7 @@ def execute(lesson):
         exec(compile(code, lesson['code'], 'exec'), namespace)
     images,narrow=capture_figures()
     plt.close('all')
-    return dict(stdout=output.getvalue(),figures=images,figures_narrow=narrow,illustration=illustration(lesson,namespace,output.getvalue()))
+    return dict(stdout=output.getvalue(),figures=images,figures_narrow=narrow,illustration=illustration(lesson['slug']))
 
 if __name__=='__main__':
     course=json.loads((ROOT/'src/course.json').read_text())

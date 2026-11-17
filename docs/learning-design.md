@@ -23,3 +23,10 @@ changing who is treated. For overlap, distinguish the weight concentration
 diagnostic from the separate empty-cell example. In the remaining lessons, keep
 the transfer case independent and give it a first hint about the relevant
 evidence and a second hint about how to use it.
+
+## Sentence-level review
+
+The [course copy audit](copy-audit.md) records the prerequisite check,
+progression, scope of each model and numerical evidence from each original
+and edited path. The lesson keeps the interpretation of the published
+example next to its result, with fresh-question feedback separate.

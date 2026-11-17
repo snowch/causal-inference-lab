@@ -38,3 +38,9 @@ export and import, and JavaScript-free reading. Browser tests confirmed that a
 later Python exception leaves both the successful output and its exported
 record intact. These checks establish behaviour and example arithmetic.
 Learner understanding remains unmeasured.
+
+## Full learner-facing review — 17 November 2026
+
+The [opening and closing copy audit](copy-audit.md) records the prerequisites,
+sentence-level findings across all 18 investigations and shared surfaces,
+the results of the documented edits, and limits of the verification.
