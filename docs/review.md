@@ -17,3 +17,24 @@ Verification: seven native test groups pass; all 18 exact published examples exe
 Visual review: overview and mobile lesson use the retained readable typography and quiet layout. Code may scroll horizontally within its editor; the document does not overflow at 390 px. Optional tools, hints, notes and worked output leave the main reading route uncluttered. The causal hero uses explicit arrow directions.
 
 Limitations: no novice usability study, full formal causal-identification review or assistive-technology user study has been conducted. Source references were selected for methodological reading; source titles are not evidence that their entire texts were reviewed in this session. Real causal studies need domain-specific assumptions and analysis beyond these small invented examples.
+
+## Learner-flow review — 17 November 2026
+
+The UX and learning-design pass names the values learners edit and the output
+fields they compare in all 18 investigations. The two hints in each lesson
+now point to the evidence for its fresh question. The prepared example and
+comparison instructions are visible with optional panels closed.
+
+Tab moves from the editor to Run Python. The existing run shortcut is visible,
+and Stop can receive keyboard focus when a run starts. Restore example saves the
+draft it replaces and offers Recover draft in Tools. The recovery copy is part
+of progress exports. An execution error shows its message separately from
+successful output. Run JSON and the final report use the last successful
+execution, including when a later attempt fails.
+
+The full check passed native calculations, all 18 browser examples, links,
+feedback, keyboard Stop and restart, draft recovery after reload, progress
+export and import, and JavaScript-free reading. Browser tests confirmed that a
+later Python exception leaves both the successful output and its exported
+record intact. These checks establish behaviour and example arithmetic.
+Learner understanding remains unmeasured.

@@ -11,7 +11,7 @@ def visit(page,path=''):
     page.wait_for_selector('html[data-ready="true"]')
 def wait_result(page):
     page.wait_for_function("/Completed|reported an error|could not finish/.test(document.querySelector('#status').textContent)",timeout=150000)
-    assert page.locator('#status').inner_text().startswith('Completed'),page.locator('#output').inner_text()
+    assert page.locator('#status').inner_text().startswith('Completed'),page.locator('#error-summary').text_content()
 def download(page,selector,name):
     with page.expect_download() as record:page.locator(selector).click()
     path=RESULTS/name;record.value.save_as(path);return path
@@ -37,6 +37,11 @@ try:
         visit(page,'lessons/'+LESSONS[0]['slug']+'.html')
         assert not page.locator('#run-result').is_visible()
         assert not page.locator('#stop').is_visible()
+        editor=page.locator('#code')
+        initial=editor.input_value()
+        editor.press('Tab')
+        assert page.locator('#run').evaluate("(button) => button === document.activeElement")
+        assert editor.input_value()==initial
         worked=json.loads((ROOT/'.cache/worked.json').read_text())['lessons']
         for i,l in enumerate(LESSONS):
             code=(ROOT/'python'/l['code']).read_text()
@@ -50,13 +55,18 @@ try:
             assert page.locator('#plots img').count()==len(worked[l['slug']]['figures'])
             print('PASS browser Python:',l['slug'],flush=True)
         # Error, Stop and restart use actual runtime state, not mocked messages.
+        previous_output=page.locator('#output').inner_text()
         page.locator('#code').fill("raise ValueError('deliberate test error')")
         page.locator('#run').click()
         page.wait_for_function("document.querySelector('#status').textContent.includes('reported an error')")
-        assert 'deliberate test error' in page.locator('#output').inner_text()
+        assert 'deliberate test error' in page.locator('#error-summary').inner_text()
+        assert page.locator('#output').inner_text()==previous_output
         page.locator('#code').fill('while True: pass')
-        page.locator('#run').click();page.locator('#stop').click()
+        page.locator('#run').press('Enter')
+        assert page.locator('#stop').evaluate("(button) => button === document.activeElement")
+        page.locator('#stop').press('Enter')
         assert 'Stopped' in page.locator('#status').inner_text()
+        assert page.locator('#run').evaluate("(button) => button === document.activeElement")
         page.locator('#code').fill("print('recovered')")
         page.locator('#run').click();wait_result(page)
         assert 'recovered' in page.locator('#output').inner_text()
@@ -69,26 +79,39 @@ try:
         record=json.loads(download(page,'#export-run','run.json').read_text())
         assert record['course']=='causal-inference-lab' and record['source']==code
         assert record['versions']['pyodide']=='0.27.7'
-        page.locator('#code').fill(code+'\n# edit after execution')
+        edited_code="raise ValueError('a later failed attempt')"
+        page.locator('#code').fill(edited_code)
         assert 'changed' in page.locator('#output-provenance').inner_text()
+        page.locator('#run').click()
+        page.wait_for_function("document.querySelector('#status').textContent.includes('reported an error')")
+        assert 'a later failed attempt' in page.locator('#error-summary').inner_text()
+        record_after_error=json.loads(download(page,'#export-run','run-after-error.json').read_text())
+        assert record_after_error==record
         report=download(page,'#export-report','report.md').read_text()
         assert 'changed after this run' in report and 'exported exact source' in report
+        assert 'a later failed attempt' not in report
         page.locator(f'input[name=answer][value="{LESSONS[-1]["correct"]}"]').check()
         page.locator('#quiz button').click()
         assert 'That reasoning fits' in page.locator('#quiz-feedback').inner_text()
         page.locator('#mark-read').check()
         page.reload();page.wait_for_selector('html[data-ready="true"]')
-        assert page.locator('#code').input_value().endswith('# edit after execution')
+        assert page.locator('#code').input_value()==edited_code
+        assert page.locator('#saved-draft').is_visible()
         assert page.locator('#report-question').input_value().startswith('Does the specified')
         assert page.locator('#mark-read').is_checked()
         page.locator('#editor-tools > summary').click();page.locator('#restore').click()
         assert page.locator('#code').input_value()==(ROOT/'python'/LESSONS[-1]['code']).read_text()
+        page.reload();page.wait_for_selector('html[data-ready="true"]')
+        page.locator('#editor-tools > summary').click();page.locator('#recover-draft').click()
+        assert page.locator('#code').input_value()==edited_code
+        assert page.locator('#code').evaluate("(editor) => editor === document.activeElement")
         page.screenshot(path=str(RESULTS/'lesson-desktop.png'),full_page=True)
         visit(page)
         assert page.locator('#progress-count').inner_text()=='1 / 18 read'
         page.locator('.portable-progress > summary').click()
         saved=download(page,'#export-progress','progress.json')
         data=json.loads(saved.read_text());assert data['course']=='causal-inference-lab'
+        assert data['data']['draft:'+LESSONS[-1]['slug']+':restore-backup']==edited_code
         page.evaluate('localStorage.clear()');page.reload();page.wait_for_selector('html[data-ready="true"]')
         page.locator('.portable-progress > summary').click();page.locator('#import-progress').set_input_files(str(saved))
         page.wait_for_function("document.querySelector('#progress-status').textContent.startsWith('Imported')")
