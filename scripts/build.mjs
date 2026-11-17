@@ -43,7 +43,7 @@ for(const [i,l]of lessons.entries()){
  for(const [j,svg]of record.figures.entries()){
   const filename=l.slug+'-'+j+'.svg';await fs.writeFile('dist/lessons/'+filename,svg);
   const narrowFilename=l.slug+'-'+j+'-narrow.svg';await fs.writeFile('dist/lessons/'+narrowFilename,record.figures_narrow[j]);
-  figures.push(`<figure class="worked-figure"><picture><source media="(max-width:700px)" srcset="${narrowFilename}"><img class="plot" src="${filename}" alt="Plot generated from the published Python during the build. Refer to its labelled axes and the text output." loading="lazy"></picture><figcaption><a href="${filename}" target="_blank" rel="noopener">Open full-size figure ↗</a></figcaption></figure>`);
+  figures.push(`<figure class="worked-figure"><picture><source media="(max-width:700px)" srcset="${narrowFilename}"><img class="plot" src="${filename}" alt="${esc(l.plot)}" loading="lazy"></picture><figcaption><a href="${filename}" target="_blank" rel="noopener">Open full-size figure ↗</a></figcaption></figure>`);
  }
  const body=renderLesson({lesson:{...l,worked:record},index:i,lessons,modules,code,figures});
  await fs.writeFile('dist/lessons/'+l.slug+'.html',shell(l.title,body,'../'));

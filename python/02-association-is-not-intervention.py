@@ -8,6 +8,8 @@ observed = np.where(training == 1, y1, y0)
 naive = observed[training == 1].mean() - observed[training == 0].mean()
 print('Observed difference:', naive)
 print('Model ATE:', (y1 - y0).mean())
+print('High-preparation counts (untreated, treated):',
+      preparation[training == 0].sum(), preparation[training == 1].sum())
 
 import matplotlib.pyplot as plt
 plt.bar(['Observed difference', 'Model causal effect'], [naive, (y1-y0).mean()], color=['#607ac1', '#3a8b77'])
