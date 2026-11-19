@@ -1,6 +1,7 @@
 """Real browser Python execution, error recovery, exports and responsive reading."""
 import json, math, os, re, subprocess, sys, time, urllib.request
 from pathlib import Path
+from runtime_startup import check_runtime_startup
 from playwright.sync_api import sync_playwright
 ROOT=Path(__file__).resolve().parents[1]
 LESSONS=json.loads((ROOT/'src/course.json').read_text())['lessons']
@@ -225,6 +226,7 @@ try:
         assert 'Observed difference: 15' in static.locator('.worked').inner_text()
         assert static.evaluate('document.documentElement.scrollWidth <= innerWidth + 1')
         assert not errors,errors
+        check_runtime_startup(browser, BASE, LESSONS[0]['slug'])
         browser.close()
         print('PASS: exports, drafts, feedback, Stop/restart, phone, theme and JavaScript-free reading.')
 finally:
