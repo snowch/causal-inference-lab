@@ -1,3 +1,4 @@
+import {buildOffline} from './offline.mjs';
 // Copyright © 2026 Christopher Snow
 import fs from 'node:fs/promises';
 import {execFileSync} from 'node:child_process';
@@ -34,7 +35,7 @@ await fs.cp('python','dist/python',{recursive:true});
 await fs.writeFile('dist/worked-environment.json',JSON.stringify(worked.environment,null,2));
 await fs.writeFile('dist/.nojekyll','');
 await fs.writeFile('dist/favicon.svg','<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 36 36"><rect width="36" height="36" rx="10" fill="#315bf6"/><path d="m10 25 8-15 8 15M13 20h10" fill="none" stroke="white" stroke-width="2" stroke-linecap="round"/><circle cx="18" cy="10" r="3" fill="#a6c4ff"/></svg>');
-const shell=(title,body,p='')=>`<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="color-scheme" content="light dark"><meta name="description" content="Learn causal inference through 18 short Python investigations. Explore observational comparisons, causal diagrams, adjustment and identification assumptions."><title>${esc(title)} · Causal Inference Lab</title><link rel="icon" href="${p}favicon.svg"><link rel="stylesheet" href="${p}vendor/katex.min.css"><link rel="stylesheet" href="${p}style.${version}.css"><script>try{document.documentElement.dataset.theme=localStorage.getItem('cil:theme')||'light'}catch{}</script><script type="module" src="${p}app.${version}.js"></script></head><body>${header(p)}${body}${footer(p)}</body></html>`;
+const shell=(title,body,p='')=>`<!doctype html><html lang="en-GB"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="reading-state-managed" content="true"><link rel="stylesheet" href="${p}app-status.css"><link rel="stylesheet" href="${p}runtime-recovery.css"><meta name="color-scheme" content="light dark"><meta name="description" content="Learn causal inference through 18 short Python investigations. Explore observational comparisons, causal diagrams, adjustment and identification assumptions."><title>${esc(title)} · Causal Inference Lab</title><link rel="icon" href="${p}favicon.svg"><link rel="stylesheet" href="${p}vendor/katex.min.css"><link rel="stylesheet" href="${p}style.${version}.css"><script>try{document.documentElement.dataset.theme=localStorage.getItem('cil:theme')||'light'}catch{}</script><script type="module" src="${p}app.${version}.js"></script></head><body>${header(p)}${body}${footer(p)}</body></html>`;
 await fs.writeFile('dist/index.html',shell('What would happen if we changed it?' ,renderHome(course)));
 for(const [i,l]of lessons.entries()){
  const code=await fs.readFile('python/'+l.code,'utf8');
@@ -51,6 +52,10 @@ for(const [i,l]of lessons.entries()){
 const notes=await fs.readFile('src/field-notes.html','utf8');
 await fs.writeFile('dist/field-notes.html',shell('Field notes',notes));
 execFileSync('python3',['scripts/prepare-runtime.py'],{stdio:'inherit'});
+for(const file of ['offline.mjs','release-contract.mjs','release-metadata.mjs','media-range.mjs','experiment-state.mjs','runtime-recovery.mjs','runtime-recovery.css','app-status.css'])await fs.copyFile('src/'+file,'dist/'+file);
+const offlineGit=args=>execFileSync('git',['-c','safe.directory='+process.cwd(),...args],{encoding:'utf8'}).trim();
+const commit=process.env.COURSE_COMMIT||(offlineGit(['status','--porcelain'])?null:offlineGit(['rev-parse','HEAD']));
+await buildOffline('dist',{commit,date:commit?offlineGit(['show','-s','--format=%cs',commit]):null});
 await fs.rm('.preview/causal-inference-lab',{recursive:true,force:true});
 await fs.mkdir('.preview/causal-inference-lab',{recursive:true});
 await fs.cp('dist','.preview/causal-inference-lab',{recursive:true});
