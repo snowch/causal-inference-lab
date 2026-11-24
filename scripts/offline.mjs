@@ -45,6 +45,7 @@ export async function buildOffline(
 ) {
   const files = (await filesUnder(directory)).filter(
     (path) =>
+      path !== ".nojekyll" &&
       path !== "sw.js" &&
       path !== "release.json" &&
       !path.startsWith("releases/"),
