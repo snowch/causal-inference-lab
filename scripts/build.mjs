@@ -52,7 +52,7 @@ for(const [i,l]of lessons.entries()){
 const notes=await fs.readFile('src/field-notes.html','utf8');
 await fs.writeFile('dist/field-notes.html',shell('Field notes',notes));
 execFileSync('python3',['scripts/prepare-runtime.py'],{stdio:'inherit'});
-for(const file of ['offline.mjs','release-contract.mjs','release-metadata.mjs','media-range.mjs','experiment-state.mjs','runtime-recovery.mjs','runtime-recovery.css','app-status.css'])await fs.copyFile('src/'+file,'dist/'+file);
+for(const file of ['offline.mjs','header-controls.mjs','header-controls.LICENSE.txt','release-contract.mjs','release-metadata.mjs','media-range.mjs','experiment-state.mjs','runtime-recovery.mjs','runtime-recovery.css','app-status.css'])await fs.copyFile('src/'+file,'dist/'+file);
 const offlineGit=args=>execFileSync('git',['-c','safe.directory='+process.cwd(),...args],{encoding:'utf8'}).trim();
 const commit=process.env.COURSE_COMMIT||(offlineGit(['status','--porcelain'])?null:offlineGit(['rev-parse','HEAD']));
 await buildOffline('dist',{commit,date:commit?offlineGit(['show','-s','--format=%cs',commit]):null});
